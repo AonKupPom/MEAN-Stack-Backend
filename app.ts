@@ -16,6 +16,7 @@ const storeUserController = require('./controllers/storeUser');
 const loginController = require('./controllers/login');
 const loginUserController = require('./controllers/loginUser');
 const logoutController = require('./controllers/logout');
+const aon = require('./controllers/aon');
 
 // Add new feature 
 const myPostController = require('./controllers/myPostController');
@@ -56,6 +57,10 @@ app.use("*", (req, res, next) => {
 })
 
 app.get('/', homeController);
+
+app.get('/aon', aon.aonGet);
+
+app.get('/aon2', aon.aon2);
 
 // User Registration
 app.get('/auth/register', redirectIfAuthenticatedMiddleware, newUserController);
