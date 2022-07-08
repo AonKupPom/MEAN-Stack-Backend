@@ -1,9 +1,9 @@
-import express from 'express';
-import ejs from 'ejs';
-import mongoose from 'mongoose';
-import expressSession from 'express-session';
-import flash from 'connect-flash';
-import fileUpload from 'express-fileupload';
+const express = require('express')
+const app = express();
+const ejs = require('ejs');
+const mongoose = require('mongoose');
+const expressSession = require('express-session');
+const flash = require('connect-flash');
 
 // Controllers
 const newPostController = require('./controllers/newPost');
@@ -27,11 +27,12 @@ const deletePostController = require('./controllers/deletePostController');
 const authMiddleware = require('./middleware/authMiddleware');
 const redirectIfAuthenticatedMiddleware = require('./middleware/redirectIfAuthenticatedMiddleware');
 
+// File Upload Package
+const fileUpload = require('express-fileupload');
+// Validation Middleware
 
 // mongodb://localhost:27017/my_database
-
-mongoose.connect('mongodb+srv://sasawat:sIz9xe4LZFs9bvct@mean-stack.cb9amll.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
-const app = express();
+mongoose.connect('mongodb+srv://sasawat:sIz9xe4LZFs9bvct@mean-stack.cb9amll.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true });
 
 app.set('view engine', 'ejs');
 
@@ -85,7 +86,7 @@ app.get('/posts/delete/:id', authMiddleware, deletePostController)
 app.use((req, res) => res.render('notfound'));
 
 let port
-port  = process.env.PORT;
+port = process.env.PORT;
 if (port == null || port == "") {
     port = 4000;
 }
