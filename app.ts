@@ -6,6 +6,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 // const setRoutes = require('./routes');
 
+const auth = require('./middleware/auth');
+const upload = require('./middleware/upload');
 const bookCtrl = require('./controller/Book.controller');
 const userCtrl = require('./controller/User.controller')
 const computerCtrl = require('./controller/Computer.controller')
@@ -58,10 +60,10 @@ app.put('/updateBook/:id',bookCtrl.update);
 app.delete('/deleteBook/:id',bookCtrl.delete);
 
 // Computer
-// app.post('/addComputer',upload.single('image'), computerCtrl.insert);
+app.post('/addComputer',upload.single('image'), computerCtrl.insert);
 app.get('/getComputers',computerCtrl.getAll);
 app.get('/getComputerById/:id',computerCtrl.get);
-// app.put('/updateComputer/:id',upload.single('image'), computerCtrl.update);
+app.put('/updateComputer/:id',upload.single('image'), computerCtrl.update);
 app.delete('/deleteComputer/:id',computerCtrl.delete);
 
 // User
@@ -71,12 +73,12 @@ app.get('/getUsers',userCtrl.getAll);
 app.get('/getUserById/:id',userCtrl.get);
 app.put('/updateUser/:id',userCtrl.update);
 app.delete('/deleteUser/:id',userCtrl.delete);
-// app.post('/getCurrentUser',auth.default.verifyToken, userCtrl.getCurrentUser);
-// app.put('/updateProfile_picture/:id',upload.single('profile_picture'), userCtrl.updateProfile_picture);
+app.post('/getCurrentUser',auth, userCtrl.getCurrentUser);
+app.put('/updateProfile_picture/:id', userCtrl.updateProfile_picture, upload.single('profile_picture'));
 
 // Authenticate
 app.post('/login',userCtrl.login);
-// app.post('/sendToken',auth.default.verifyToken, userCtrl.sendToken);
+app.post('/sendToken',auth, userCtrl.sendToken);
 
 // Domain
 app.post('/addDomain',domainCtrl.insert);
