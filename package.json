@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -22,7 +22,8 @@
     "express-session": "^1.17.2",
     "mongoose": "5.13.8",
     "mongoose-unique-validator": "^3.0.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "ts-node": "~10.8.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.13"
