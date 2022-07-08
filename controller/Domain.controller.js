@@ -1,5 +1,5 @@
-const Book = require('../models/Book.model');
-const model = Book;
+const Domain = require('../models/Domain.model');
+const model = Domain;
 
 module.exports = {
 

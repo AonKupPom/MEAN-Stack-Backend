@@ -1,14 +1,69 @@
-import User from '../model/User.model';
-import BaseCtrl from './base.controller';
-import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
-import * as auth from '../middlewares/auth';
-import * as fs from 'fs';
+const User = require('../models/User.model');
+const model = User;
 
-class UserCtrl extends BaseCtrl {
-  model = User;
+module.exports = {
 
-  login = async (req, res) => {
+  getAll: async (req, res) => {
+    try {
+      model.find().exec().then(docs => {
+        res.json(docs)
+      })
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
+  },
+
+  count: async (req, res) => {
+    try {
+      const count = await model.count();
+      res.status(200).json(count);
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
+  },
+
+  insert: async (req, res) => {
+    try {
+      console.log(req.body);
+
+      const obj = await new model(req.body).save();
+      res.status(201).json(obj);
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
+  },
+
+  get: async (req, res) => {
+    try {
+      model.findOne({ _id: req.params.id }).exec().then(docs => {
+        res.json(docs)
+      })
+    } catch (err) {
+      return res.status(500).json({ error: err.message });
+    }
+  },
+
+  update: async (req, res) => {
+    try {
+      const respond = await model.findOneAndUpdate({ _id: req.params.id }, req.body);
+      res.status(200).json(respond);
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
+  },
+
+  delete: async (req, res) => {
+    try {
+      console.log(req.params, "PARAMS");
+
+      await model.findOneAndRemove({ _id: req.params.id });
+      res.status(200).json({ success: true });
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
+  },
+
+  login: async (req, res) => {
     try {
       const { email, password } = req.body;
 
@@ -16,7 +71,7 @@ class UserCtrl extends BaseCtrl {
         res.status(400).send("All input is required")
       }
 
-      const user = await this.model.findOne({ email })
+      const user = await model.findOne({ email })
 
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = jwt.sign(
@@ -27,8 +82,8 @@ class UserCtrl extends BaseCtrl {
           }
         )
 
-        await this.model.findByIdAndUpdate(user._id, { token: token })
-        let respond = await this.model.findById(user._id);
+        await model.findByIdAndUpdate(user._id, { token: token })
+        let respond = await model.findById(user._id);
         res.status(200).json({
           title: respond.title,
           firstname: respond.firstname,
@@ -40,16 +95,16 @@ class UserCtrl extends BaseCtrl {
           token: respond.token
         });
       }
-      else{
+      else {
         res.status(400).send("Invalid credentails.");
       }
 
     } catch (err) {
       return res.status(400).json({ error: err.message });
     }
-  }
+  },
 
-  register = async (req, res) => {
+  register: async (req, res) => {
     try {
       console.log(req.body)
       const { title, firstname, lastname, email, password, address, birthDate, gender, tel } = req.body
@@ -59,7 +114,7 @@ class UserCtrl extends BaseCtrl {
       }
 
       // มีผู้ใช้นี้อยู่แล้วหรือไม่
-      const oldUser = await this.model.findOne({ email });
+      const oldUser = await model.findOne({ email });
       if (oldUser) {
         res.status(409).json('User already exist.')
       }
@@ -68,7 +123,7 @@ class UserCtrl extends BaseCtrl {
       let encryptedPassword = await bcrypt.hash(password, 10);
 
       // สร้าง User
-      const user = await new this.model({
+      const user = await new model({
         title,
         firstname,
         lastname,
@@ -90,21 +145,21 @@ class UserCtrl extends BaseCtrl {
         }
       )
 
-      await this.model.findByIdAndUpdate(user._id, { token: token })
-      let respond = await this.model.findById(user._id);
+      await model.findByIdAndUpdate(user._id, { token: token })
+      let respond = await model.findById(user._id);
       res.status(201).json(respond.token);
 
     } catch (err) {
       res.status(400).json({ error: err.message });
     }
-  }
+  },
 
-  sendToken = (req, res) => {
-    res.status(200).json({loggedIn: true})
-  }
+  sendToken: (req, res) => {
+    res.status(200).json({ loggedIn: true })
+  },
 
-  getCurrentUser = async (req, res) => {
-    const user = await this.model.findById(req.user.user_id)
+  getCurrentUser: async (req, res) => {
+    const user = await model.findById(req.user.user_id)
     res.status(200).json({
       _id: user._id,
       title: user.title,
@@ -118,28 +173,27 @@ class UserCtrl extends BaseCtrl {
       tel: user.tel,
       profile_picture: user.profile_picture
     });
-  }
+  },
 
-  updateProfile_picture = async (req,res) => {
+  updateProfile_picture: async (req, res) => {
     try {
       const uploadsPath = req.file.path.substring(req.file.path.indexOf('uploads'))
-      const respond = await this.model.findOneAndUpdate({ _id: req.params.id }, {
+      const respond = await model.findOneAndUpdate({ _id: req.params.id }, {
         profile_picture: uploadsPath
       });
-      if(respond.profile_picture)
-      this.deleteFiles(respond.profile_picture);
+      if (respond.profile_picture)
+        this.deleteFiles(respond.profile_picture);
       res.status(200).json(uploadsPath);
     } catch (err) {
       return res.status(400).json({ error: err.message });
     }
-  }
+  },
 
-  deleteFiles(filepath) {
+  deleteFiles: (filepath) => {
     fs.unlink(`././node-backend/${filepath}`, (err) => {
       if (err) throw err;
       console.log('File deleted!');
     });
   }
-}
 
-export default UserCtrl;
+};

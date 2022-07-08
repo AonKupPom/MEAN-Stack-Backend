@@ -1,5 +1,5 @@
-const Book = require('../models/Book.model');
-const model = Book;
+const Server = require('../models/Server.model');
+const model = Server;
 
 module.exports = {
 

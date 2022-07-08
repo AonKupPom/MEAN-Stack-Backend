@@ -1,5 +1,5 @@
-const Book = require('../models/Book.model');
-const model = Book;
+const WebDesign = require('../models/WebDesign.model');
+const model = WebDesign;
 
 module.exports = {
 
