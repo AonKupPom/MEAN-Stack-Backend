@@ -51,7 +51,7 @@ app.use(flash());
 global.loggedIn = null;
 
 app.use("*", (req, res, next) => {
-    loggedIn = req.session.userId;
+    global.loggedIn = req.session.userId;
     next();
 })
 
@@ -85,7 +85,8 @@ app.get('/posts/delete/:id', authMiddleware, deletePostController)
 
 app.use((req, res) => res.render('notfound'));
 
-let port = process.env.PORT;
+let port
+port = process.env.PORT;
 if (port == null || port == "") {
     port = 4000;
 }
