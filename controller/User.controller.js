@@ -162,7 +162,7 @@ module.exports = {
       });
     }
     catch(err) {
-      res.json({ error: err.message });
+      res.status(403).json({ error: err.message });
     }
   },
 
