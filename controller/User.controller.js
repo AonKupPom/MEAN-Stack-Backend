@@ -74,7 +74,7 @@ module.exports = {
         res.status(400).send("All input is required")
       }
 
-      const user = await model.findOne({ email })
+      const user = model.findOne({ email })
 
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = jwt.sign(
@@ -85,16 +85,9 @@ module.exports = {
           }
         )
 
-        await model.findByIdAndUpdate(user._id, { token: token })
-        let respond = await model.findById(user._id);
+        model.findByIdAndUpdate(user._id, { token: token })
+        let respond = model.findById(user._id);
         res.status(200).json({
-          title: respond.title,
-          firstname: respond.firstname,
-          lastname: respond.lastname,
-          address: respond.birthDate,
-          gender: respond.gender,
-          role: respond.role,
-          tel: respond.tel,
           token: respond.token
         });
       }
