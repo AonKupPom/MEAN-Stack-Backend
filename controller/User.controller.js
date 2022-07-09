@@ -87,15 +87,16 @@ module.exports = {
 
         await model.findByIdAndUpdate(user._id, { token: token })
         res.status(200).json({
-          token: token
+          token: token,
+          loggedIn: true
         });
       }
       else {
-        res.status(400).send("Invalid credentails.");
+        res.status(400).json({error: "login fail", loggedIn: false });
       }
 
     } catch (err) {
-      return res.status(400).json({ error: err.message });
+      return res.status(400).json({ error: err.message, loggedIn: false });
     }
   },
 
