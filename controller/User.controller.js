@@ -145,20 +145,25 @@ module.exports = {
   },
 
   getCurrentUser: async (req, res) => {
-    const user = await model.findById(req.user.user_id)
-    res.status(200).json({
-      _id: user._id,
-      title: user.title,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      email: user.email,
-      address: user.address,
-      birthDate: user.birthDate,
-      gender: user.gender,
-      role: user.role,
-      tel: user.tel,
-      profile_picture: user.profile_picture
-    });
+    try{
+      const user = await model.findById(req.user.user_id)
+      res.status(200).json({
+        _id: user._id,
+        title: user.title,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        address: user.address,
+        birthDate: user.birthDate,
+        gender: user.gender,
+        role: user.role,
+        tel: user.tel,
+        profile_picture: user.profile_picture
+      });
+    }
+    catch(err) {
+      res.json({ error: err.message });
+    }
   },
 
   updateProfile_picture: async (req, res) => {
