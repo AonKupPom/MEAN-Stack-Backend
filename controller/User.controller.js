@@ -85,10 +85,9 @@ module.exports = {
           }
         )
 
-        model.findByIdAndUpdate(user._id, { token: token })
-        let respond = await model.findById(user._id);
+        await model.findByIdAndUpdate(user._id, { token: token })
         res.status(200).json({
-          token: respond.token
+          token: token
         });
       }
       else {
