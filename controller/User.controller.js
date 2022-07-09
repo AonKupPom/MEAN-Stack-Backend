@@ -85,7 +85,7 @@ module.exports = {
           }
         )
 
-        model.findByIdAndUpdate(user._id, { token: token })
+        await model.findByIdAndUpdate(user._id, { token: token })
         res.status(200).json({
           token: token,
           loggedIn: true
@@ -142,8 +142,7 @@ module.exports = {
       )
 
       await model.findByIdAndUpdate(user._id, { token: token })
-      let respond = await model.findById(user._id);
-      res.status(201).json(respond.token);
+      res.status(201).json(token);
 
     } catch (err) {
       res.status(400).json({ error: err.message });
