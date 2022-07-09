@@ -79,13 +79,9 @@ module.exports = {
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = jwt.sign(
           { user_id: user._id, email },
-          'qightysdrvp',
-          {
-            expiresIn: "30d"
-          }
+          'qightysdrvp'
         )
 
-        await model.findByIdAndUpdate(user._id, { token: token })
         res.status(200).json({
           token: token,
           loggedIn: true
