@@ -185,7 +185,7 @@ module.exports = {
   },
 
   deleteFiles: (filepath) => {
-    fs.unlink(`././node-backend/${filepath}`, (err) => {
+    fs.unlink(`././${filepath}`, (err) => {
       if (err) throw err;
       console.log('File deleted!');
     });
