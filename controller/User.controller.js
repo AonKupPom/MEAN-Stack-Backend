@@ -85,7 +85,7 @@ module.exports = {
           }
         )
 
-        await model.findByIdAndUpdate(user._id, { token: token })
+        model.findByIdAndUpdate(user._id, { token: token })
         res.status(200).json({
           token: token,
           loggedIn: true
