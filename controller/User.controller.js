@@ -114,8 +114,8 @@ module.exports = {
       if (oldUser) {
         res.status(409).json('User already exist.')
       }
-
-      // เข้ารหัส
+      else{
+        // เข้ารหัส
       let encryptedPassword = await bcrypt.hash(password, 10);
 
       // สร้าง User
@@ -132,17 +132,8 @@ module.exports = {
         tel
       }).save();
 
-      // สร้าง Token
-      const token = jwt.sign(
-        { user_id: user._id, email },
-        'qightysdrvp',
-        {
-          expiresIn: "30d"
-        }
-      )
-
-      await model.findByIdAndUpdate(user._id, { token: token })
-      res.status(201).json(token);
+      res.status(201).json({ success: true });
+      }
 
     } catch (err) {
       res.status(400).json({ error: err.message });
